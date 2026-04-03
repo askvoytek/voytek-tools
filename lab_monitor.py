@@ -1,30 +1,29 @@
-import requests
-from datetime import datetime
+import subprocess
+import datetime
 
-# Your lab services
-services = [
-    {"name": "voytek.ai",    "url": "https://voytek.ai"},
-    {"name": "Portainer",    "url": "http://192.168.50.160:9000"},
-    {"name": "Uptime Kuma",  "url": "http://192.168.50.160:3001"},
-    {"name": "Homer",        "url": "http://192.168.50.160:8902"},
-    {"name": "Open WebUI",   "url": "http://192.168.50.13:8080"},
-    {"name": "Ollama",       "url": "http://localhost:11434/api/tags"},
-]
+# Voytek Homelab Devices
+devices = {
+    "rpi5-ubuntu  (production)": "192.168.50.13",
+    "rpi5-dev                 ": "192.168.50.160",
+    "pihole (Zero 2 W)        ": "192.168.50.6",
+    "pi3 (future k8s node)    ": "192.168.50.10",
+}
 
-def check_service(service):
-    try:
-        response = requests.get(service["url"], timeout=5)
-        status = "✅ UP" if response.status_code < 400 else "❌ DOWN"
-        ms = round(response.elapsed.total_seconds() * 1000)
-        return f"{status}  {service['name']:<15} {ms}ms"
-    except:
-        return f"❌ DOWN  {service['name']:<15} unreachable"
+def ping(ip):
+    result = subprocess.run(
+        ["ping", "-c", "1", "-W", "1", ip],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+    return result.returncode == 0
 
-print(f"\n🖥️  VOYTEK LAB MONITOR — {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-print("=" * 50)
+def check_lab():
+    print(f"\n🏠 Voytek Homelab Status")
+    print(f"🕐 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("-" * 45)
+    for name, ip in devices.items():
+        status = "✅ ONLINE " if ping(ip) else "❌ OFFLINE"
+        print(f"  {status}  {name}  {ip}")
+    print("-" * 45 + "\n")
 
-for service in services:
-    print(check_service(service))
-
-print("=" * 50)
-print("✅ = Online  ❌ = Offline\n")
+check_lab()
