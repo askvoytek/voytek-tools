@@ -2,12 +2,7 @@ import subprocess
 import datetime
 
 # Voytek Homelab Devices
-devices = {
-    "rpi5-ubuntu  (production)": "192.168.50.13",
-    "rpi5-dev                 ": "192.168.50.160",
-    "pihole (Zero 2 W)        ": "192.168.50.6",
-    "pi3 (future k8s node)    ": "192.168.50.10",
-}
+from config import devices
 
 def ping(ip):
     result = subprocess.run(
