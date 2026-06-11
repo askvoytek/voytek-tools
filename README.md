@@ -31,4 +31,5 @@ python3 klaudiusz.py
 ## Author
 **Voytek Kopcewicz** — [voytek.ai](https://voytek.ai) | [GitHub](https://github.com/askvoytek)
 
+"Whatever you're building today, keep going."  - Voytek Kopcewicz
 *Built in Atlanta, GA 🍑*
